@@ -110,6 +110,7 @@
                         <li>Hello, Vagrant! <small>( cliché? )</small></li>
                         <li>Hello, Vagrants!</li>
                         <li>Picking and Packing Boxes</li>
+                        <li>Something More Complex</li>
                         <li>Beyond Vagrant</li>
                     </ul>
 
@@ -641,6 +642,9 @@ bash ./cleanup_demo.sh
                             <li>disable usb</li>
                             <br />
                             <li>install OS</li>
+                            <li>enable networking</li>
+                            <li>root (pw: vagrant)</li>
+                            <li>create vagrant user as an admin (pw: vagrant)</li>
                         </ul>
 
                     </section>
@@ -651,10 +655,82 @@ bash ./cleanup_demo.sh
                         <p>
                             <pre>
                                 <code data-trim contendeditable>
+sudo yum install wget -y
 wget 'https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub'
+mkdir .ssh
+mv vagrant.pub .ssh/authorized_keys
+chmod 600 .ssh/authorized_keys
+sudo visudo
+sudo vi /etc/ssh/sshd_config # Modify UseDNS from yes to no
                                 </code>
                             </pre>
                         </p>
+
+                    </section>
+
+                    <section>
+
+                        <h3>Install VirtualBox Guest Tools</h3>
+                        <p>
+                            Sadly installing the requirements for VirtualBox Guest Tools is broken for CentOS 7.
+                        </p>
+
+                    </section>
+
+                    <section>
+
+                        <h3>Create the Box</h3>
+                        <p>
+                            <pre>
+                                <code data-trim contendeditable>
+vagrant package --base centos7
+                                </code>
+                            </pre>
+                        </p>
+
+                    </section>
+
+                    <section>
+
+                        <h3>Import the Box</h3>
+                        <p>
+                            <pre>
+                                <code data-trim contendeditable>
+vagrant box list
+vagrant box add centos7 centos7.box
+                                </code>
+                            </pre>
+                        </p>
+
+                    </section>
+
+                    <section>
+
+                        <h3>Use the Box</h3>
+                        <p>
+                            <pre>
+                                <code data-trim contendeditable>
+vagrant init centos7
+vagrant up # error expected
+vagrant ssh
+vagrant destroy -f
+                                </code>
+                            </pre>
+                        </p>
+
+                    </section>
+
+                    <section>
+
+                        <h3>Clean-Up Demo 4</h3>
+                        <p>
+                            <pre>
+                                <code data-trim contendeditable>
+bash ./cleanup_demo.sh
+                                </code>
+                            </pre>
+                        </p>
+
                     </section>
 
                 </section>
@@ -663,10 +739,20 @@ wget 'https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pu
                 <section>
 
                     <section>
-                        Something More Complex
+                        <h2>Something More Complex</h2>
                     </section>
 
                     <section>
+
+                        <p>
+                            Talk about the system I set up at the beginning of a project.
+                        </p>
+                        <ul>
+                            <li>riak-cs</li>
+                            <li>mysql</li>
+                            <li>node.js( x2)</li>
+                            <li>nginx</li>
+                        </ul>
 
                     </section>
 
@@ -684,8 +770,27 @@ wget 'https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pu
                     <section>
 
                         <h2><a href="http://kitchen.ci/">KitchenCI</a></h2>
+                        <p>Automated unit testing of systems.</p>
+                        <p>Needs more investigation.</p>
 
                     </section>
+
+                </section>
+
+
+                <section>
+
+                    <h2>goals review</h2>
+                    <ul>
+                        <li>Meet Vagrant</li>
+                        <li>VagrantCloud</li>
+                        <li>How I use Vagrant</li>
+                        <li>Hello, Vagrant!</li>
+                        <li>Hello, Vagrants!</li>
+                        <li>Picking and Packing Boxes</li>
+                        <li>Something More Complex</li>
+                        <li>Beyond Vagrant</li>
+                    </ul>
 
                 </section>
 

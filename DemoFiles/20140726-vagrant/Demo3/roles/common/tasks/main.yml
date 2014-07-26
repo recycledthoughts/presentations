@@ -1,0 +1,15 @@
+---
+# Common
+
+- name: Copy the EPEL file to the remote system.
+  copy: src="epel-release-6-8.noarch.rpm" dest=/tmp/
+
+- name: Install EPEL RPM.
+  # yum: "https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm"
+  yum: name="/tmp/epel-release-6-8.noarch.rpm" state=installed
+
+#- yum: name="{{ item }}" state=installed
+#
+#  with_items:
+#  - lsof
+#  - wget
