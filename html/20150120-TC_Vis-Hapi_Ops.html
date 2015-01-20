@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Hapi Ops</title>
+
+        <meta name="description" content="Monitoring of Ops from the Hapi Framework">
+        <meta name="author" content="Richard Isaacson">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" href="/css/reveal.css">
+        <link rel="stylesheet" href="/css/theme/black.css" id="theme">
+
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="/lib/css/zenburn.css">
+
+                <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+                <script>
+                        if( window.location.search.match( /print-pdf/gi ) ) {
+                                var link = document.createElement( 'link' );
+                                link.rel = 'stylesheet';
+                                link.type = 'text/css';
+                                link.href = '/css/print/pdf.css';
+                                document.getElementsByTagName( 'head' )[0].appendChild( link );
+                        }
+                </script>
+
+        <!--[if lt IE 9]>
+        <script src="/lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+
+
+                <section>
+
+                    <section>
+
+                        <h2>Monitoring of Ops from the Hapi Framework</h2>
+
+                        <h4>Initial</h4>
+
+                        <br />
+
+                        <p>
+                            Richard Isaacson / <a href="https://twitter.com/beldurnik">@beldurnik</a> / <a href="https://github.com/risaacson">risaacson@github</a></small>
+                        </p>
+
+
+                    </section>
+
+                    <section>
+
+                        <h3>who is richard</h3>
+                        <ul>
+                            <li>just another geek with a beard</li>
+                            <br />
+                            <li>(soon to be former) Senior Software Engineer at White House Custom Color(WHCC)</li>
+                            <li>(also Systems Engineer, Software/Systems Architect, QA Engineer, Release Engineer)</li>
+                        </ul>
+
+                    </section>
+
+                </section>
+
+                <section>
+
+                    <h3>Overview of the problem</h3>
+
+                    <p>
+                        Looking for less expensive ways to monitor a NodeJS application that is written using the hapi
+                        web framework. Being able to graph the data is key along with ad-hoc searching and threshold alerting.
+                    </p>
+
+                </section>
+
+                <section>
+
+                    <h3>Overview of Hapi and Good</h3>
+
+                    <p>
+                        <a href="http://hapijs.com/">Hapi</a> is a web framework that is from the folks at <a
+                            href="http://www.walmartlabs.com/">Walmart Labs</a> that is in the same space as <a
+                            href="http://expressjs.com/">Express</a> and <a href="http://koajs.com/">Koa</a>. Hapi has a
+                        plugin, named <a href="https://github.com/hapijs/good">good</a>, which allows for you to write
+                        out operations(ops) data to various destinations including console.log, file, udp, and http.
+                    </p>
+
+                </section>
+
+                <section>
+
+                    <h3>Format of good outputting ops data</h3>
+
+                    <pre>
+                        <code  class="json">
+{
+    "event":"ops",
+    "timestamp":1421787683887,
+    "host":"app1",
+    "pid":81068,
+    "os": {
+        "load":[0.16796875,0.16796875,0.1640625],
+        "mem":{"total":536870912,"free":345341952},
+        "uptime":69386},
+        "proc": {
+            "uptime":14272,
+            "mem":{"rss":97964032,"heapTotal":74638592,"heapUsed":30558144},
+            "delay":0.8329682350158691
+        },
+        "load":{"requests":{"8123":{"total":182,"disconnects":0,"statusCodes":{"200":182}}
+    },
+    "concurrents":{"8123":1},
+    "responseTimes":{"8123":{"avg":0.38461538461538464,"max":1}},
+    "sockets":{"http":{"total":0},"https":{"total":0}}}
+}
+                        </code>
+                    </pre>
+
+                </section>
+
+                <section>
+
+                    <section>
+
+                        <h3>Early thoughts and problems with write your own solution</h3>
+
+                        <p>
+                            Initially I wanted to write my own server based on my usage of Node/Hapi, <a href="http://influxdb.com/">InfluxDB</a>, and <a href="http://d3js.org/">D3.js</a>.
+                        </p>
+
+                    </section>
+
+                    <section>
+
+                        <p>
+                            D3.js worked flawless once I had the data bindings correct with the data I wanted.
+                        </p>
+
+                        <p>
+                            Writing your own dashboard is more work less play.
+                        </p>
+
+                    </section>
+
+                    <section>
+
+                        <p>
+                            The solution fell flat on data import. At the time I was taking a days worth of data, chunking it up, and trying to shove it into Influx. Influx couldn't keep up.
+                        </p>
+
+                    </section>
+
+                </section>
+
+                <section>
+
+                    <h3>ELK stack as a solution?</h3>
+
+                    <p>
+                        ELK = Elasticsearch + Logstash + Kibana
+                    </p>
+
+                    <section>
+
+                    </section>
+
+                    <section>
+
+                    <p>
+                        <a href="http://www.elasticsearch.org/overview/elasticsearch/">Elasticsearch</a> is a search server based on Lucene. It provides a distributed, multitenant-capable full-text search engine with a RESTful web interface and schema-free JSON documents. <a href="https://en.wikipedia.org/wiki/Elasticsearch">Wikipedia</a>
+                    </p>
+
+                        </section>
+
+                    <section>
+
+                    <p>
+                        <a href="http://www.elasticsearch.org/overview/logstash/">logstash</a> is a tool for managing events and logs. You can use it to collect logs, parse them, and store them for later use (like, for searching). <a href="http://logstash.net/">logstash</a>
+                    </p>
+
+                        </section>
+
+                    <section>
+
+                    <p>
+                        elasticsearch works seamlessly with <a href="http://www.elasticsearch.org/overview/kibana/">kibana</a> to let you see and interact with your data. <a href="http://www.elasticsearch.org/overview/kibana/">kibana</a>
+                    </p>
+
+                        </section>
+
+                </section>
+
+                <section>
+
+                    <h3>Demo</h3>
+
+                </section>
+
+                <section>
+
+                    <h3>Alerting is a problem</h3>
+
+                    <p>
+                        Kibana provides a dynamic dashboard but as of yet no alerting.
+                    </p>
+
+                </section>
+
+                <section>
+
+                    <h3>The Future</h3>
+
+                    <p>
+                        <a href="http://riemann.io/">Riemann</a> aggregates events from your servers and applications with a powerful stream processing language. Send an email for every exception raised by your code.
+                    </p>
+
+                </section>
+
+
+                <section>
+
+                   <h2>Questions/Comments/Praise</h2>
+                   <p>
+                      Richard Isaacson / <a href="https://twitter.com/beldurnik">@beldurnik</a> / <a href="https://github.com/risaacson">risaacson@github</a></small>
+                   </p>
+                   <p>
+                       <a href="http://github.com/recycledthoughts/presentations">http://github.com/recycledthoughts/presentations</a>
+                   </p>
+                   <p>
+                       <a href="http://presentations.recycledthoughts.org">http://presentations.recycledthoughts.org</a>
+                   </p>
+                   <h1>Thank you!</h1>
+
+                </section>
+
+
+            </div>
+
+        </div>
+
+        <script src="/lib/js/head.min.js"></script>
+        <script src="/js/reveal.js"></script>
+
+        <script>
+
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+                // Parallax scrolling
+                // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+                // parallaxBackgroundSize: '2100px 900px',
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: '/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: '/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: '/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: '/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: '/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: '/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+            });
+
+        </script>
+
+    </body>
+</html>

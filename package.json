@@ -1,15 +1,14 @@
 {
   "name": "presentations",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Ricahrd Isaacson",
   "description": "presentations",
   "private": true,
   "main": "index.js",
-  "engines": {
-     "node": "0.10.*"
-  },
   "dependencies": {
-    "hapi": "6.x.x",
+    "good": "5.1.0",
+    "good-console": "3.1.2",
+    "hapi": "8.x.x",
     "reveal.js": "*"
   },
   "engines": {
